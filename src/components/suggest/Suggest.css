@@ -1,0 +1,46 @@
+.suggest {
+  background-color: aliceblue;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.suggest-label {
+  display: flex;
+  margin: 10px 0;
+}
+
+.suggest-input {
+  margin: 0 0 0 10px;
+  width: 100%;
+  padding: 3px 5px;
+}
+
+.suggest-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.suggest-item {
+  background-color: lightblue;
+  padding: 7px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-name {
+  flex-grow: 1;
+}
+
+.user-email {
+  font-size: small;
+}
+
+.user-avatar {
+  width: 20px;
+  height: 20px;
+  margin: 0 5px 0 0;
+}

@@ -1,0 +1,27 @@
+h1 {
+  font-size: 20px;
+  font-weight: lighter;
+  border-bottom: 1px dotted lightskyblue;
+  display: inline-block;
+}
+
+a {
+  color: lightskyblue;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#app {
+  width: 720px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 740px) {
+  #app {
+    width: 100%;
+    padding: 0 10px;
+  }
+}

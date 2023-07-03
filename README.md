@@ -4,6 +4,10 @@
 
 ![](./demo.gif)
 
+## Preview 🎉
+
+<https://piecioshka.github.io/demo-react-suggest>
+
 ## Technologies
 
 * :white_check_mark: Vite `v4.3.9`

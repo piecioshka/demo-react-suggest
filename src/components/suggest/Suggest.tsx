@@ -51,6 +51,7 @@ export const Suggest: React.FC<unknown> = () => {
           type="text"
           onChange={useDebounce.current?.checked ? onChangeDebounced : onChange}
           placeholder='Example "Brandon Crona"'
+          data-testid="suggest-input"
         />
       </label>
 

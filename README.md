@@ -14,6 +14,7 @@
 * :white_check_mark: React `v18.2.0`
 * :white_check_mark: TypeScript `v5.0.2`
 * :white_check_mark: ESLint `v8.38.0`
+* :white_check_mark: vitest `v0.32.4`
 
 ## Getting started
 

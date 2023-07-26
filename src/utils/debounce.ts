@@ -1,4 +1,3 @@
-
 export const debounce = <T extends (...args: Parameters<T>) => ReturnType<T>>(
   origFn: T,
   time: number,

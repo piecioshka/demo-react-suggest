@@ -1,11 +1,11 @@
 import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import './Suggest.css';
-import { debounce } from '../../utils/debounce';
+import { useDebounce } from '../../hooks/useDebounce';
 import { findUsers } from '../../services/users';
 import { User } from '../../types/user';
 
 export const Suggest: React.FC<unknown> = () => {
-  const useDebounce = useRef<HTMLInputElement>(null);
+  const isDebounceEnabled = useRef<HTMLInputElement>(null);
   const [users, setUsers] = useState<User[]>([]);
 
   const controller = useRef(new AbortController());
@@ -34,15 +34,13 @@ export const Suggest: React.FC<unknown> = () => {
     request.current = null;
   }, []);
 
-  const onChangeDebounced = useCallback(debounce(onChangeRegular, 500), [
-    onChangeRegular,
-  ]);
+  const onChangeDebounced = useDebounce(onChangeRegular, 500);
 
   const onChange = useCallback(
     (evt: ChangeEvent<HTMLInputElement>) => {
       const phrase = evt.target.value.trim();
       setUsers([]);
-      useDebounce.current?.checked
+      isDebounceEnabled.current?.checked
         ? onChangeDebounced(phrase)
         : onChangeRegular(phrase);
     },
@@ -54,7 +52,7 @@ export const Suggest: React.FC<unknown> = () => {
       <label>
         <input
           type="checkbox"
-          ref={useDebounce}
+          ref={isDebounceEnabled}
           data-testid="suggest-enable-debounce"
         />
         Use <code>debounce()</code>

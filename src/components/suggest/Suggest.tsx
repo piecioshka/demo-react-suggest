@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import './Suggest.css';
 import { debounce } from '../../utils/debounce';
 import { findUsers } from '../../services/users';
@@ -8,39 +8,55 @@ export const Suggest: React.FC<unknown> = () => {
   const useDebounce = useRef<HTMLInputElement>(null);
   const [users, setUsers] = useState<User[]>([]);
 
-  let controller = new AbortController();
-  let request: Promise<User[]> | null = null;
+  const controller = useRef(new AbortController());
+  const request = useRef<Promise<User[]> | null>();
 
-  const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const phrase = e.target.value.trim();
-
+  const onChangeRegular = useCallback(async (phrase: string) => {
     if (!phrase) {
-      setUsers([]);
       return;
     }
 
-    if (request) {
-      controller.abort();
-      controller = new AbortController();
+    if (request.current) {
+      controller.current.abort();
+      controller.current = new AbortController();
     }
 
     try {
-      request = findUsers(phrase, { signal: controller.signal });
-      setUsers(await request);
-      console.debug('piecioshka', { phrase, users });
-    } catch {
+      request.current = findUsers(phrase, {
+        signal: controller.current.signal,
+      });
+      setUsers(await request.current);
+    } catch (err) {
       // empty
+      console.error(err);
     }
 
-    request = null;
-  };
+    request.current = null;
+  }, []);
 
-  const onChangeDebounced = debounce(onChange, 500);
+  const onChangeDebounced = useCallback(debounce(onChangeRegular, 500), [
+    onChangeRegular,
+  ]);
+
+  const onChange = useCallback(
+    (evt: ChangeEvent<HTMLInputElement>) => {
+      const phrase = evt.target.value.trim();
+      setUsers([]);
+      useDebounce.current?.checked
+        ? onChangeDebounced(phrase)
+        : onChangeRegular(phrase);
+    },
+    [onChangeDebounced, onChangeRegular],
+  );
 
   return (
     <div className="suggest">
       <label>
-        <input type="checkbox" ref={useDebounce} />
+        <input
+          type="checkbox"
+          ref={useDebounce}
+          data-testid="suggest-enable-debounce"
+        />
         Use <code>debounce()</code>
       </label>
 
@@ -49,13 +65,13 @@ export const Suggest: React.FC<unknown> = () => {
         <input
           className="suggest-input"
           type="text"
-          onChange={useDebounce.current?.checked ? onChangeDebounced : onChange}
-          placeholder='Example "Brandon Crona"'
+          onChange={onChange}
+          placeholder="Example 'Brandon Crona'"
           data-testid="suggest-input"
         />
       </label>
 
-      <ul className="suggest-list">
+      <ul className="suggest-list" data-testid="suggest-list">
         {users.map((user) => (
           <li key={user.id} className="suggest-item">
             <img src={user.avatarUrl} className="user-avatar" alt="" />

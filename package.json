@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "predeploy": "npm run build -- --base /demo-react-suggest/",
+    "predeploy": "npm run build -- --base ./",
     "deploy": "cross-env NODE_DEBUG=gh-pages gh-pages -d dist/",
     "test": "vitest run src/",
     "test:watch": "vitest src/"
